@@ -38,7 +38,7 @@ training = []
 output = []
 out_empty = [0 for _ in range(len(labels))]
 
-# One hot encoding, Converting the words to numerals
+# One hot encoding, konvertere ord til numeriske værdier
 for x, doc in enumerate(x_docs):
     bag = []
     wrds = [stemmer.stem(w) for w in doc]
@@ -59,7 +59,7 @@ for x, doc in enumerate(x_docs):
 training = np.array(training)
 output = np.array(output)
 
-# Design our neural net
+# Designer vores neurale netværk
 net = tflearn.input_data(shape=[None, len(training[0])])
 net = tflearn.fully_connected(net, 10)
 net = tflearn.fully_connected(net, 10)
@@ -69,7 +69,6 @@ net = tflearn.regression(net)
 
 model = tflearn.DNN(net)
 model.fit(training, output, n_epoch=500, batch_size=8, show_metric=False)
-#model.save('model.tflearn')
 
 def bag_of_words(s, words):
     bag = [0 for _ in range(len(words))]
@@ -89,10 +88,10 @@ def chat():
         if inp.lower() == 'goodbye':
             break
 
-        # Probability of correct response 
+        # Sandsynlighedsfordeling over korrekte svar.
         results = model.predict([bag_of_words(inp, words)]) # results = model.predict( ... ) giver resultat
 
-        # Picking the greatest number from probability  Vælger den der var mest sandsynlig
+        # Vælger den der var mest sandsynlig
         results_index = np.argmax(results)
 
         tag = labels[results_index] # Finder tager den mest sandsynlige og smider ind i Tag
@@ -102,5 +101,5 @@ def chat():
                 responses = tg['responses']
                 print("AVA:\t" + random.choice(responses))
 
-# Run our chat function
+# Kører vores chat funktion
 chat()
